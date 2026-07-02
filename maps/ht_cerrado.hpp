@@ -20,9 +20,9 @@ struct EntryCerrado {
     EntryCerrado() : key(), value(0), state(EMPTY) {}
 };
 
-
 template <typename K> // Permite que la clave de la entry sea de cualquier tipo (en este caso long long y string).
 
+///@class HashTablaCerrado
 ///@brief Clase que representa una Tabla Hash con Hashing Cerrrado
 class HashTableCerrado {
 private:
@@ -70,19 +70,20 @@ private:
 
 public:
     ///@brief Constructor explícito de la tabla hash con hashing cerrado.
-    ///@param initialCapacity Tamaño inicial de la tabla (mayor que 0).
+    /// Inicializa la tabla con una capacidad, un loadFactor y una ProbeStrategy especificos.
+    ///@param initialCapacity Capacidad inicial de la tabla (mayor que 0).
     ///@param strat Estrategia de sondeo (LINEAR, QUADRATIC o DOUBLE). Por defecto LINEAR.
-    ///@param maxLoad Factor de carga límite antes de un resize. Por defecto 0.5 como se vio en el PPT8.
-        HashTableCerrado(long long initialCapacity,
+    ///@param maxLoad Factor de carga límite antes de un resize. Por defecto menor a 0.5 como se vio en el PPT8.
+    explicit HashTableCerrado(long long initialCapacity,
                             ProbeStrategy strat = ProbeStrategy::LINEAR,
-                            double maxLoad = 0.5)
+                            double maxLoad = 0.49)
         : capacity(initialCapacity), count(0), strategy(strat), maxLoadFactor(maxLoad) {
         table.resize(capacity);
     }
 
-    ///@brief Inserta una clave con un valor específico o actualiza su valor si ya existe.
+    ///@brief Inserta una entry con un valor específico en la tabla o actualiza su valor si ya existe.
     ///@param key Clave a buscar o insertar.
-    ///@param value Valor entero asociado que se le asignará a la clave.
+    ///@param value Valor entero asociado que se le asignará a la entry.
     void insert(const K& key, int value) {
         if (static_cast<double>(count + 1) / capacity > maxLoadFactor) {
             resize(capacity * 2);
@@ -170,7 +171,7 @@ public:
         }
     }
 
-    
+    ///@brief Metodos que retornan la capacidad, el tamaño y el loadFactor de la Tabla.
     long long size() const { return count; }
     long long bucketCount() const { return capacity; }
     double loadFactor() const { return static_cast<double>(count) / capacity; }
